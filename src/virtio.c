@@ -1329,7 +1329,7 @@ VIRTIODevice *virtio_block_init(VIRTIOBusDef *bus, BlockDevice *bs)
 
     // TODO if VIRTIO_BLK_F_BLK_SIZE feature negotiated, fill in offset 20(?) with blk_size=512
     // This is to find the "optimal block size"
-    s->common.device_features = VIRTIO_F_VERSION_1 | VIRTIO_F_IOCAP_QUEUE | VIRTIO_BLK_F_SEG_MAX;
+    s->common.device_features = VIRTIO_F_VERSION_1 | VIRTIO_BLK_F_SEG_MAX;
 
     return (VIRTIODevice *)s;
 }
