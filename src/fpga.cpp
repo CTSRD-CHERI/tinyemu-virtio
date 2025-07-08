@@ -147,8 +147,8 @@ uint32_t FPGA_io::dma_set_window(uint64_t addr) {
     uint64_t offset = addr & (~DMA_WINDOW_MASK);
     if (offset != last_offset) {
         if (selector_fd >= 0) {
-            printf("writing address selector (write) 0x0 == 0x%" PRIx64 "\n",
-                    offset);
+            //printf("writing address selector (write) 0x0 == 0x%" PRIx64 "\n",
+            //        offset);
             int error = fmem_write64(selector_fd, 0, offset);
             if (error != 0) {
                 printf("error with address selector (write) 0x0 == 0x%" PRIx64 "\n",
@@ -188,7 +188,7 @@ uint32_t FPGA_io::dma_read32(uint64_t raddr) {
 void FPGA_io::dma_write8(uint64_t waddr, uint8_t wdata) {
     // Assuming DMA mutex has been taken
     uint32_t dma_offset = dma_set_window(waddr);
-    printf("dma_write8 addr 0x%016lx data 0x%u\r\n", waddr, wdata);
+    //printf("dma_write8 addr 0x%016lx data 0x%u\r\n", waddr, wdata);
     if (dma_fd >= 0) fmem_write8(dma_fd, dma_offset, wdata);
     else {
         fprintf(stderr, "ERROR: Attempted write to unusable fmem dma device file: %s\r\n", strerror(errno));
@@ -198,7 +198,7 @@ void FPGA_io::dma_write8(uint64_t waddr, uint8_t wdata) {
 
 void FPGA_io::dma_write32(uint64_t waddr, uint32_t wdata) {
     // Assuming DMA mutex has been taken
-    printf("dma_write32 addr 0x%016lx data 0x%u\r\n", waddr, wdata);
+    //printf("dma_write32 addr 0x%016lx data 0x%u\r\n", waddr, wdata);
     uint32_t dma_offset = dma_set_window(waddr);
     if (dma_fd >= 0) fmem_write32(dma_fd, dma_offset, wdata);
     else {
@@ -377,7 +377,7 @@ void FPGA::close_dma()
 
 void FPGA::dma_read(uint64_t addr, uint8_t *data, size_t size) {
     std::lock_guard<std::mutex> lock(dma_mutex);
-    printf("dma_read addr: %016lx size: %lu\r\n", addr, size);
+    //printf("dma_read addr: %016lx size: %lu\r\n", addr, size);
     size_t i = 0;
     if ((addr & 3) == 0) {
         for (; i<size; i+=4) {
@@ -389,12 +389,12 @@ void FPGA::dma_read(uint64_t addr, uint8_t *data, size_t size) {
         }
     }
     for (; i<size; i++) data[i] = io->dma_read8(addr+i);
-    printf("dma_read done, data[0]: 0x%x\r\n", data[0]);
+    //printf("dma_read done, data[0]: 0x%x\r\n", data[0]);
 }
 
 void FPGA::dma_write(uint64_t addr, const uint8_t *data, size_t size) {
     std::lock_guard<std::mutex> lock(dma_mutex);
-    printf("dma_write addr: %016lx size: %lu data[0]: 0x%x\r\n", addr, size, data[0]);
+    //printf("dma_write addr: %016lx size: %lu data[0]: 0x%x\r\n", addr, size, data[0]);
     size_t i = 0;
     if ((addr & 3) == 0) {
         for (; i < size; i += 4) {
@@ -406,7 +406,7 @@ void FPGA::dma_write(uint64_t addr, const uint8_t *data, size_t size) {
         }
     }
     for (; i < size; i++) io->dma_write8(addr+i, data[i]);
-    printf("dma_write done\r\n");
+    //printf("dma_write done\r\n");
 }
 
 /* XXX Implement IRQs somehow.  Just stubbed out for now. */
