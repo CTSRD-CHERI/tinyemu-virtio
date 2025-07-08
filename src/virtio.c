@@ -52,7 +52,7 @@ static inline ssize_t getrandom(void *buf, size_t buflen, unsigned int flags) {
 #include "virtio.h"
 #include "fmem.h"
 
-#define DEBUG_VIRTIO
+//#define DEBUG_VIRTIO
 
 /* VIRTIO Features and status bits - copied from FreeRTOS */
 /* Device status bits */
