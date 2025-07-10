@@ -147,8 +147,8 @@ uint32_t FPGA_io::dma_set_window(uint64_t addr) {
     uint64_t offset = addr & (~DMA_WINDOW_MASK);
     if (offset != last_offset) {
         if (selector_fd >= 0) {
-            //printf("writing address selector (write) 0x0 == 0x%" PRIx64 "\n",
-            //        offset);
+            printf("writing address selector (write) 0x0 == 0x%" PRIx64 "\n",
+                    offset);
             int error = fmem_write64(selector_fd, 0, offset);
             if (error != 0) {
                 printf("error with address selector (write) 0x0 == 0x%" PRIx64 "\n",
