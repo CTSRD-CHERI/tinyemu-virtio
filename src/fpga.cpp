@@ -145,22 +145,22 @@ static uint64_t last_offset = DMA_WINDOW_MASK;
 uint32_t FPGA_io::dma_set_window(uint64_t addr) {
     // Assuming DMA mutex has been taken
     uint64_t offset = addr & (~DMA_WINDOW_MASK);
-    //if (offset != last_offset) {
-    //    if (selector_fd >= 0) {
-            //printf("writing address selector (write) 0x0 == 0x%" PRIx64 "\n",
-            //        offset);
+    if (offset != last_offset) {
+        if (selector_fd >= 0) {
+            printf("writing address selector (write) 0x0 == 0x%" PRIx64 ", addr was 0x%" PRIx64 ", return offset is 0x%" PRIx64 "\n",
+                    offset, addr, (uint32_t)(addr & DMA_WINDOW_MASK));
             int error = fmem_write64(selector_fd, 0, offset);
             if (error != 0) {
                 printf("error with address selector (write) 0x0 == 0x%" PRIx64 "\n",
                        offset);
             }
             last_offset = offset;
-        //}
-        //else {
-        //    fprintf(stderr, "ERROR: Attempted write unusable fmem address selector device file: %s\r\n", strerror(errno));
-        //    abort();
-        //};
-    //}
+        }
+        else {
+            fprintf(stderr, "ERROR: Attempted write unusable fmem address selector device file: %s\r\n", strerror(errno));
+            abort();
+        };
+    }
     // Return the masked address, which is always within the window size.
     return (uint32_t)(addr & DMA_WINDOW_MASK);
 }
