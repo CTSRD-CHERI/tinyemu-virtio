@@ -2897,7 +2897,7 @@ static pthread_t pending_notify_thread;
 
 static void async_queue_notify(VIRTIODevice *s, int queue_idx)
 {
-    printf("async_queue_notify\r\n");
+    //printf("async_queue_notify\r\n");
     atomic_fetch_or_explicit(&s->pending_queue_notify, 1 << queue_idx, memory_order_release);
     pthread_mutex_lock(&pending_notify_lock);
     pending_notify = 1;
@@ -2915,12 +2915,12 @@ static void *pending_notify_worker(void *opaque)
     struct PendingNotifyWorkerData *data = opaque;
     int n = data->n;
     VIRTIODevice **ps = data->ps;
-    printf("pending_notify_worker 1\r\n");
+    //printf("pending_notify_worker 1\r\n");
     for (;;) {
         pthread_mutex_lock(&pending_notify_lock);
         while (!pending_notify)
             pthread_cond_wait(&pending_notify_cond, &pending_notify_lock);
-        printf("pending_notify_worker 2\r\n");
+        //printf("pending_notify_worker 2\r\n");
         if (pending_notify_stop) {
             pending_notify_stop = 0;
             pthread_mutex_unlock(&pending_notify_lock);
@@ -2928,12 +2928,12 @@ static void *pending_notify_worker(void *opaque)
             free(data);
             return NULL;
         }
-        printf("pending_notify_worker 3\r\n");
+        //printf("pending_notify_worker 3\r\n");
         /* clear now; caller expected to perform them */
         pending_notify = 0;
         pthread_mutex_unlock(&pending_notify_lock);
         for (int i = 0; i < n; i++) {
-            printf("pending_notify_worker 4 device: %d\r\n", i);
+            //printf("pending_notify_worker 4 device: %d\r\n", i);
             VIRTIODevice *s = ps[i];
             /*
              * We must clear the bits before we process them otherwise we would
